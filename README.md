@@ -199,11 +199,3 @@ https://www.figma.com/file/2GEj1n9ePAuFRDOwjAXJgm/WAD?node-id=14%3A149
 
 ## 🤓 Presentation Link ##
 https://youtu.be/jbZKeGwn8_U
-
-
-## 🤓 Useful Resources ##
-* [**Markdown** Cheat Sheet](https://www.markdownguide.org/cheat-sheet/)
-* [**GOOD** README Example 1](https://github.com/testing-library/cypress-testing-library)
-* [**GOOD** README Example 2](https://github.com/typeorm/typeorm)
-* [**GOOD** README Example 3](https://github.com/amark/gun)
-* [**GOOD** README Example 4](https://github.com/google/leveldb)
