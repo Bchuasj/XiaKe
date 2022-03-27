@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Event</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- Vue3 -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        img {
+            background-color: white;
+        }
+
+        /* 
+        .form-control {
+            background-color: rgb(194, 194, 194);
+            width: 200%;
+        } */
+
+        .form-control::placeholder {
+            color: black;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, 'Arial Narrow', Arial, sans-serif;
+        }
+
+
+        ul,
+        li,
+        a {
+            background-color: white;
+        }
+
+        /* span{
+            background-color: white;
+        } */
+
+        .navbar {
+            padding-top: 20px;
+            padding-bottom: 20px;
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 20px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #navbar_ul {
+            padding-top: 30px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif, 'Arial Narrow', Arial, sans-serif;
+        }
+
+        .a_font {
+            font-weight: 500;
+        }
+
+        #side_navbar {
+            width: 70px;
+            text-align: left;
+            margin-left: 1%;
+            margin-top: 1%;
+
+        }
+    </style>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <!-- This is the API from Firebase Realtime Database -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+
+    <script>
+        // Your web app's Firebase configuration
+        // You can find yours at Firebase -> Project Overview -> Project Settings
+        // -> SDK setup and configuration -> CDN
+        const firebaseConfig = {
+            apiKey: "AIzaSyBe1j34_xGmROT7VFbdLmaPKif_EG_ZqDM",
+            authDomain: "is216g4-b346b.firebaseapp.com",
+            databaseURL: "https://is216g4-b346b-default-rtdb.firebaseio.com",
+            projectId: "is216g4-b346b",
+            storageBucket: "is216g4-b346b.appspot.com",
+            messagingSenderId: "877616492688",
+            appId: "1:877616492688:web:b4aa0b2d1c3215b0d6a815",
+            measurementId: "G-VEHFWW8K5L"
+        };
+        // Initialize Firebase
+
+        firebase.initializeApp(firebaseConfig);
+
+    </script>
+    <!-- PAYPAL SCRIPT SRC -->
+    <script
+        src="https://www.paypal.com/sdk/js?client-id=Aal8oZp1QFaUai4jgC9q4g6DgfWON7v-Xn65CfucvJ9Tj6VYUyNI8yjUk9jx7RHXKv8r_AX_gafbhpnR&currency=SGD">
+        </script>
+
+
+</head>
+
+<body id="app">
+
+
+
+
+    <!-- TOP BAR -->
+    <div class="container-fluid my-3">
+        <div class="row">
+            <div class="col-4 col-sm-1">
+                <img src="img/XiaKe.jpg" style="width: 40%;" class="ms-4">
+            </div>
+            <div class="col-5 col-sm-10"></div>
+            <div class="col-3 col-sm-1">
+                <!-- SIDEBAR TOGGLE -->
+                <a class="btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                    aria-controls="offcanvasExample" id="side_navbar">
+                    <img src="img/toggler.png" style="width: 100%; text-align: center;" />
+                </a>
+
+                <!-- SIDEBAR MAIN -->
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample"
+                    aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasExampleLabel"></h5>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                    </div>
+
+                    <div class="offcanvas-body" style="text-align: center;">
+                        <ul class="navbar-nav mr-auto  flex-column" id="navbar_ul">
+                            <li class="nav-item d-flex d-block m-auto pb-5">
+                                <img class="rounded-circle" src="img/profile.png" style="width: 50px;" />
+                                <span style="padding-top: 10px; padding-left: 10px;" id="nav_username">Username</span>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active link-dark a_font" aria-current="page"
+                                    href="Home.html">HOME</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active link-dark a_font" aria-current="page"
+                                    href="fullcalendar-5.10.1/examples/background-events.html">MY CALENDAR</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active link-dark a_font" href="My_Account.html">MY ACCOUNT</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active link-secondary" href="login-signup.html">LOGOUT</a>
+                            </li>
+                        </ul>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!-- SPONSORS CAROUSEL BAR -->
+    <div class="container-fluid p-0">
+        <div class="row-fluid">
+            <div id="carouselExampleIndicators" class="carousel slide m-4 " data-bs-ride="carousel">
+                <div class="carousel-indicators ">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                        class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                        aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner rounded-3" style="width: 100%; height: 30vh">
+                    <div class="carousel-item active">
+                        <img src="img/1.png" class="d-block img-fluid" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>First Sponsor</h5>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/2.png" class="d-block img-fluid" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Second Sponsor</h5>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="img/3.png" class="d-block img-fluid" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Third Sponsor</h5>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- MAIN CONTENT -->
+    <div class="container-fluid">
+
+        <div class="row d-flex justify-content-between m-0">
+
+            <!-- WELFARE ITEMS -->
+            <div class="col">
+                <div class="rounded-3">
+                    <img class="img-fluid rounded-3" :src=eventimg>
+                </div>
+            </div>
+            <!-- END OF WELFARE ITEMS -->
+
+
+
+            <!-- DESCRIPTION AND FORM -->
+            <div class="col">
+                <div class="p-3 bg-light rounded-3">
+                    <h4>{{eventname}}</h4>
+
+                    <p>{{eventdesc}}</p>
+
+                    <h4 class="mb-3 mt-5">Fill Form Details</h4>
+
+                    <!-- <form id="eventregistration"> -->
+
+                    <input type="hidden" v-model="eventname">
+
+                    <select class="form-select mb-3" v-model="selectedeventday" @change="getTimeslots">
+                        <option selected>Select Event Date</option>
+                        <option v-for="eventday in eventdays" :value=eventday.day>{{eventday.day}}</option>
+                    </select>
+
+
+                    <select class="form-select mb-3" v-model="selectedtimeslot">
+                        <option selected>Select Event Timeslot</option>
+                        <option v-for="timeslot in availabletimeslots" :value=timeslot>{{timeslot}}</option>
+                    </select>
+
+                    <!-- {{selectedtimeslot}} -->
+
+
+                    <div v-if="selected_fields_required.includes('email')" class="form-floating mb-3 ">
+                        <input type="email" class="form-control" id="email" v-model="email" @change="allfieldsfilled()">
+                        <label for="email">Email Address</label>
+                    </div>
+
+                    <div v-if="selected_fields_required.includes('matricNo')" class="form-floating mb-3 ">
+                        <input type="number" min="1000000" max="99999999" class="form-control" id="matricNo"
+                            v-model="matricNo" @change="allfieldsfilled">
+                        <label for="matricNo">Matriculation Number</label>
+                    </div>
+
+                    <div v-if="selected_fields_required.includes('phone')" class="form-floating mb-3 ">
+                        <input type="number" min="10000000" max="99999999" class="form-control" id="phone"
+                            v-model="phone" @change="allfieldsfilled">
+                        <label for="phone">Phone Number</label>
+                    </div>
+
+                    <div v-if="selected_fields_required.includes('telegram')" class="form-floating mb-3 ">
+                        <input type="text" class="form-control" id="telegram" v-model="telegram"
+                            @change="allfieldsfilled">
+                        <label for="telegram">Telegram Handle</label>
+                    </div>
+
+                    <div v-show="eventprice != '0.00'">
+                        <h4 class="mt-5">Make Payment</h4>
+                        <h5 style="display:inline">Event Fee: $</h5>
+                        <h5 style="display:inline" id="eventprice">{{eventprice}}</h5>
+
+                        <p id="paymentsuccess"></p>
+
+                        <div id="paypal"></div>
+
+
+                    </div>
+                    <!-- stat: {{paymentstat}} -->
+
+                    <!-- <fieldset class="row mb-5">
+                            <legend class="col-form-label col-sm-2 pt-0">Dietary Preference</legend>
+                            <div class="col-sm-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="diet" type="radio" name="gridRadios"
+                                        id="gridRadios1" value="Normal" checked>
+                                    <label class="form-check-label" for="gridRadios1">
+                                        Normal
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="diet" type="radio" name="gridRadios"
+                                        id="gridRadios2" value="Vegetarian">
+                                    <label class="form-check-label" for="gridRadios2">
+                                        Vegetarian
+                                    </label>
+                                </div>
+
+                            </div>
+                        </fieldset> -->
+
+                    <button v-show="eventprice == '0.00' && allfieldsfilled()===true " @click="signupnow"
+                        class="btn btn-outline-primary" id="submitbutton">Sign Up Now!</button>
+
+                    <div id="a_wrapper" style="display: none;">
+                        <button v-show="allfieldsfilled()===true " @click="signupnow" class="btn btn-outline-primary"
+                            id="submitbutton">Sign Up Now!</button>
+                    </div>
+
+                    <!-- <button type="submit" class="btn btn-outline-primary" id="submitbutton">Sign Up Now!</button> -->
+                    <!-- <button type="" class="btn btn-primary" onclick="myCallback()">getresult</button> -->
+
+                    <p id='status'></p>
+
+                    <!-- </form> -->
+
+
+
+                </div>
+            </div>
+            <!-- END OF DESCRIPTION AND FORM -->
+
+        </div>
+    </div>
+
+    <!-- <div id="table-container"></div> -->
+
+
+
+    <!-- BOOTSTRAP -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+
+    <!-- VUE AND FIREBASE -->
+    <script src="signup-event.js"></script>
+
+
+
+</body>
+
+</html>

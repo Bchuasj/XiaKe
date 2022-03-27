@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Sign Up Page</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <!-- Vue3 -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        p,
+        h6 {
+            font-weight: 400;
+        }
+
+        #logo {
+            display: flex;
+            justify-content: center;
+        }
+
+        #logo_img {
+            width: 15%;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        h5 {
+            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif" */
+
+        }
+
+        .form-control,
+        .col-form-label,
+        .g-3 {
+            background-color: white;
+        }
+
+        /* .form-control,
+        .form-select {
+            border: 1px black solid;
+        } */
+
+        form>div {
+            background-color: white;
+        }
+
+        label {
+            background-color: white;
+        }
+
+        .form-check-label,
+        .form-check-label {
+            background-color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <!-- This is the API from Firebase Realtime Database -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script>
+
+        var date = ""
+        var correctPassword = ""
+
+        // Your web app's Firebase configuration
+        // You can find yours at Firebase -> Project Overview -> Project Settings
+        // -> SDK setup and configuration -> CDN
+        const firebaseConfig = {
+            apiKey: "AIzaSyBe1j34_xGmROT7VFbdLmaPKif_EG_ZqDM",
+            authDomain: "is216g4-b346b.firebaseapp.com",
+            databaseURL: "https://is216g4-b346b-default-rtdb.firebaseio.com",
+            projectId: "is216g4-b346b",
+            storageBucket: "is216g4-b346b.appspot.com",
+            messagingSenderId: "877616492688",
+            appId: "1:877616492688:web:b4aa0b2d1c3215b0d6a815",
+            measurementId: "G-VEHFWW8K5L"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        var users = firebase.database().ref('users');
+
+        // get password from database to check with input
+        // can console.log cannot return
+        function getPassword(password) {
+            var user = firebase.database().ref('users/' + password);
+            user.once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    correctPassword = snapshot.val().password
+                }
+            });
+        }
+
+        // check if the username currently exist, means user already in database, allow him to login
+        function checkIfUserExists(username) {
+            console.log("=== checkUserExists ===")
+            var user = firebase.database().ref('users/' + username);
+            user.once('value').then((snapshot) => {
+                // user in database
+                if (snapshot.exists()) {
+                    var value = snapshot.val()
+
+                    // no error since username exists
+                    document.getElementById("loginError").innerHTML = ""
+
+                    // username currently in database cannot use current username
+                    document.getElementById("status").innerText = "Username has already been taken."
+                    document.getElementById("status1").innerText = ""
+
+                    return true
+                }
+                // user not in database
+                else {
+                    // error since username does not exist
+                    document.getElementById("loginError").innerHTML = "No such Username"
+
+                    // username not currently in database, can use current username
+                    document.getElementById("status1").innerText = "Username is available."
+                    document.getElementById("status").innerText = ""
+
+                    return false
+                }
+            });
+        }
+
+        // push in currentUsername        
+        function currentUserData(username) {
+            console.log("=== currentUserData ===")
+            firebase.database().ref('Current/').set({
+                user: username
+            }, function (error) {
+                if (error) {
+                    console.log("currentuser pushed in successfully")
+                } else {
+                    console.log("currentuser failed to push in")
+                }
+            });
+        }
+
+        // register new user
+        function writeUserDataWithCompletion(username, email, faculty, password, signupDate) {
+            console.log("=== insertNewUser ===")
+            firebase.database().ref('users/' + username).set({
+                email: email,
+                faculty: faculty,
+                password: password,
+                signupDate: signupDate
+            }, function (error) {
+                if (error) {
+                    document.getElementById("status").innerText = "User Registration Failed!";
+                } else {
+                    document.getElementById("status").innerText = "User Registration Done! Please click on the back to login button to login.";
+                    document.getElementById("succeed").style.display = "block"
+                }
+            })
+        }
+
+        function redirect() {
+            window.location.href = "login-signup.html";
+        }
+
+    </script>
+
+
+    <!-- for signup matters -->
+    <!-- <script src="signup.js"></script> -->
+
+    <div class="container-fluid" id="logo">
+        <img src="img/XiaKe.jpg" id="logo_img">
+    </div>
+
+
+    <!-- login -->
+    <div id="login_signup">
+
+        <div class="mb-3 ms-1" v-if="new_user == false">
+            <h3 class="text-center">LOGIN</h3>
+            <!-- input fields -->
+            <div class="rounded bg-white p-3 mx-auto" style="width: 70%">
+                <form style="width: 80%" class="mx-auto bg-white">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" v-model="username"
+                            onchange="getPassword(this.value), currentUserData(this.value)">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" v-model="password">
+                    </div>
+                    <!-- <div class="mb-3 form-check bg-white ms-3">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+                    </div> -->
+
+                    <button type="button" class="btn btn-outline-primary me-3" @click="checkErrors()">Login</button>
+
+                    <span id="loginError" class="text-danger"></span>
+
+                    <button type="button" class="btn btn-link" @click="newUser()">New User?</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- sign up -->
+        <div class="mb-3 ms-1" v-else>
+            <h3 class="text-center">SIGNUP</h3>
+            <!-- input fields -->
+            <div class="bg-white p-3 mx-auto" style="width: 70%">
+                <form style="width: 80%" class="mx-auto bg-white">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" v-model="new_email" oninput="getEmail()">
+
+                        <!-- for email errors -->
+                        <strong id="emailStatus" class="text-danger"></strong>
+
+                    </div>
+                    <div class="mb-3">
+                        <label for="username1" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username1" v-model="new_username">
+
+                        <!-- for username errors -->
+                        <strong id="status" class="text-danger"></strong>
+
+                        <!-- for username successful -->
+                        <strong id="status1" class="text-success"></strong>
+                    </div>
+
+
+                    <div class="mb-3 row">
+                        <div class="col-12 col-sm-4">
+                            <label for="numFaculty" class="form-label">Number of Faculty</label>
+                            <select class="form-select mb-3" id="numFaculty" v-model="numFaculty">
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-12 col-sm-4">
+                            <label for="faculty1" class="form-label">Faculty 1</label>
+                            <select class="form-select mb-3" id="faculty1" v-model="selectedFaculty1"
+                                aria-label="Default select example" @change="pushFacultyCBD()">
+                                <option v-for="faculty of faculties">
+                                    {{ faculty }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-sm-4" v-if="numFaculty == 2">
+                            <label for="faculty2" class="form-label">Faculty 2</label>
+                            <select class="form-select mb-3" id="faculty2" v-model="selectedFaculty2"
+                                aria-label="Default select example" @change="pushFacultyCBD()">
+                                <option v-for="faculty of faculties">
+                                    {{ faculty }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password1" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password1" v-model="password">
+                        <!-- for password errors -->
+                        <strong v-if="errorMsg.length > 0" class="text-danger">
+                            {{ errorMsg }}
+                        </strong>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="confirmpassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword">
+                    </div>
+
+                    <div class="mb-3 row">
+                        <label for="otp" class="form-label">OTP</label>
+                        <input type="number" class="form-control col-sm-6 ms-3 mb-3" id="otp" style="width: 50%"
+                            v-model="inputOTP">
+                        <span class="col-1 bg-white"></span>
+
+                        <button type="button" class="btn btn-outline-primary me-3 col-12 col-sm-4"
+                            onclick="generateOTP()" @click="statusMsg()">Generate OTP</button>
+
+                        <span class="text-success mt-1" v-if="msg.length > 0" id="remove">
+                            {{ msg }}
+                        </span>
+
+                        <!-- for wrong OTP -->
+                        <strong id="otpStatus" class="text-danger"></strong>
+                        <!-- for OTP successful -->
+                        <strong id="otpStatus1" class="text-success"></strong>
+
+
+
+                    </div>
+
+                    <div class="row">
+                        <button type="button" class="btn ms-3 me-3 btn-outline-primary col-2" @click="check()">Sign
+                            Up</button>
+                        <button type="button" class="btn me-3 btn-outline-success col-2" id="succeed"
+                            style="display: none;" onclick="redirect()">Back to Login</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <br><br><br><br>
+
+    <footer class="bg-dark text-center text-white ">
+        <!-- Grid container -->
+        <div class="container">
+            <!-- Section: Social media -->
+            <section class="pb-4" style="height:40px">
+    
+                <!-- Github -->
+                <a class="btn btn-floating m-1" href="https://github.com/is216-supreme/is216-project-group4"
+                    role="button">
+                    <i class="fa fa-github" style="font-size:48px;color:white"></i></a>
+    
+            </section>
+        </div>
+        <!-- Grid container -->
+    
+        <!-- Copyright -->
+        <div class="text-center p-3">
+            © 2021 Copyright:
+            <a style="background-color:  rgba(0, 0, 0, 0.2); text-decoration: none;" class="text-white"
+                href="https://mdbootstrap.com/">XiaKe.com</a>
+        </div>
+        <!-- Copyright -->
+      </footer>
+
+    <script>
+
+        var email = ""
+
+        const app = Vue.createApp({
+            data() {
+                return {
+                    faculties: ["School of Accountancy", "School of Business", "School of Economics", "School of Computing and Information Systems", "School of Law", "School of Social Sciences"],
+
+                    selectedFaculty1: "",
+                    selectedFaculty2: "",
+                    selectedFaculties: {},
+                    numFaculty: 0,
+
+                    // current user data
+                    username: "",
+                    password: "",
+
+                    // new user data
+                    new_email: "",
+                    new_username: "",
+                    password: "",
+                    confirmPassword: "",
+
+                    // messages
+                    errorMsg: "", // for error message
+                    msg: "", // for status
+
+                    // check if new user or not
+                    new_user: false,
+
+                    // OTP inputted by user
+                    inputOTP: 0
+                }
+            },
+
+            methods: {
+
+                // check if all input fields for current user ok
+                checkErrors() {
+                    // no error with username, look for password in database
+                    if (document.getElementById("loginError").innerText == "") {
+                        // password inputted by user
+                        var inputPassword = this.password
+                        // check if inputPassword matches the password in database
+                        if (inputPassword == correctPassword) {
+                            console.log("successful!")
+                            window.location.href = "Home.html";
+                        }
+                        else {
+                            alert("Incorrect username or password entered!!!")
+                        }
+                    }
+                },
+                // get currentDate
+                getCurrentDate() {
+                    var date_str = ""
+                    var time = new Date()
+                    var date = time.getDate()
+                    var month = time.getMonth() + 1
+                    var year = time.getFullYear()
+                    date_str += date + "/" + month + "/" + year
+                    date = date_str
+
+                    return date_str
+                },
+
+                // connect CBD to faculty
+                facultyCBD(faculty) {
+                    console.log("=== facultyCBD ===")
+                    if (faculty == "School of Computing and Information Systems") {
+                        this.selectedFaculties["Ellipsis"] = faculty
+                    }
+                    else if (faculty == "School of Accountancy") {
+                        this.selectedFaculties["ASoc"] = faculty
+                    }
+                    else if (faculty == "School of Business") {
+                        this.selectedFaculties["Bondue"] = faculty
+                    }
+                    else if (faculty == "School of Economics") {
+                        this.selectedFaculties["OIKIOS"] = faculty
+                    }
+                    else if (faculty == "School of Law") {
+                        this.selectedFaculties["The Bar"] = faculty
+                    }
+                },
+
+                // push faculty and CBD into this.selectedFaculties, which is an object
+                pushFacultyCBD() {
+                    console.log("=== numFaultyCheck=== ")
+                    // add faculty as object where 1 or 2 faculties
+                    if (this.numFaculty == 1) {
+                        this.facultyCBD(this.selectedFaculty1)
+                    }
+                    else {
+                        this.facultyCBD(this.selectedFaculty1)
+                        this.facultyCBD(this.selectedFaculty2)
+                    }
+                    console.log(this.selectedFaculties)
+                },
+
+                // check if all input fields for new user are ok
+                check() {
+                    console.log("=== check === ")
+
+                    if (this.new_email == "") {
+                        document.getElementById("emailStatus").innerText = "Please enter an email!"
+                        this.errorMsg = "error" // to ensure form doesnt submit
+                    }
+                    else {
+                        document.getElementById("emailStatus").innerText = ""
+                        this.errorMsg = "" // to ensure error message removed
+                    }
+
+                    var email = this.new_email
+                    var username = this.new_username
+                    var password = this.password
+                    var confirmPassword = this.confirmPassword
+                    var faculty = this.selectedFaculties
+                    var signupDate = this.getCurrentDate()
+
+                    // OTP is the one sent to the email, aka correct one
+                    OTP = Number(OTP)
+
+                    // check if username already exists in the database
+                    checkIfUserExists(username)
+
+                    // check password match
+                    if (password !== confirmPassword) {
+                        this.password = ""
+                        this.confirmPassword = ""
+                        this.errorMsg = "Passwords do not match! Please re-enter the password!"
+                    }
+                    else if (password === confirmPassword) {
+                        this.errorMsg = ""
+                    }
+
+                    // check password longer than 5
+                    if (password.length < 5) {
+                        this.password = ""
+                        this.confirmPassword = ""
+                        this.errorMsg = "Please enter a password longer than 5 characters!"
+                    }
+                    else if (password.length > 5) {
+                        this.errorMsg = ""
+                    }
+
+                    // check inputOTP matches OTP sent to email
+
+                    if (OTP === 0) {
+                        document.getElementById("otpStatus").innerText = "Please enter an OTP"
+                    }
+                    else if (OTP !== this.inputOTP) {
+                        document.getElementById("otpStatus").innerText = "Incorrect OTP entered"
+                        document.getElementById("otpStatus1").innerText = ""
+                    }
+                    else if (OTP === this.inputOTP) {
+                        document.getElementById("otpStatus1").innerText = "Correct OTP entered"
+                        document.getElementById("remove").style.display = "none"
+                        document.getElementById("otpStatus").innerText = ""
+                    }
+
+                    // last check to make sure no errors elsewhere
+                    var otpCheck = document.getElementById("otpStatus").innerText
+                    var emailCheck = document.getElementById("emailStatus").innerText
+
+                    // if no errors at all, add the user into database
+                    if (this.errorMsg.length == 0 && otpCheck.length == 0 && emailCheck.length == 0) {
+                        writeUserDataWithCompletion(username, email, faculty, password, signupDate)
+                    }
+                },
+
+                // when user click new user, makes new_user true so as to show signup page
+                newUser() {
+                    console.log("=== newUser === ")
+                    this.new_user = true
+                },
+
+                // showcase status msg
+                statusMsg() {
+                    this.msg = "A 5 digit OTP has been sent to your email!"
+                }
+            }
+        }).mount('#login_signup')
+
+
+    </script>
+
+    <!--confirmation email page-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.4.0/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+
+        var OTP = ""
+        var email = ""
+
+        // get email
+        function getEmail() {
+            email = document.getElementById("email").value
+        }
+
+        function generateOTP() {
+            console.log("=== generateOTP === ")
+
+            for (var i = 0; i < 5; i++) {
+                // generate random number between 1 to 10 (not inclusive)
+                OTP += Math.floor(Math.random() * 10)
+            }
+
+            (function () {
+                emailjs.init("user_GcZJiRWuluIwz1sitMdTB"); //please encrypted user id for malicious attacks
+            })();
+            //set the parameter as per you template parameter[https://dashboard.emailjs.com/templates]
+
+            // need to parse name into to_name and from_name
+            var templateParams = {
+                email: `${email}`,
+                // to name should be username 
+                to_name: "User",
+
+                // from name should be from 
+                from_name: 'XiaKe Team',
+                message: `Your OTP is ${OTP}`,
+                from_email: 'brian.chua.2020@scis.smu.edu.sg',
+            };
+
+            emailjs.send('service_n9qny3b', 'template_mwvpmq4', templateParams)
+                .then(function (response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                }, function (error) {
+                    console.log('FAILED...', error);
+                });
+        }
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
